@@ -1,0 +1,97 @@
+But du jeu:
+
+mettre jeu et fonction en anglais
+
+
+Caractéristiques:
+    Jeu/utilitaire en 2d
+    plateau avec tuilles
+    jeu sourie + clavier
+    mouvement sur une carte plutôt ouverte
+    histoire originale
+    combat tour par tour
+    ajout de dialogue narratif
+
+
+
+Nettoyage du code
+
+
+
+Elements de base
+
+
+-> ajouter une tête qui montre qui parle
+-> ajout de pnj
+    -> ajout de dialogues
+
+-> faire map pour voyager entre les diférents villages(comme dans Evoland et rpg)
+
+-> avoir un sac, pouvoir interagir avec
+
+-> mettre un fond d'arrière plan(pas de fond unicouleur)
+
+-> faire un dictionnaire de collision -> faire différentes textures pour chaque bloc
+
+-> rajouter des éléments comme du décor ou des !/E pour les pnj pour qu'on voit qu'on peut leur parler
+Modes de jeu:
+-> jeu de gestion de ressource -> comme pokemon
+-> batiments sont piégés par des fantomes, il faut les éviter et prendre les livres qui nous intéressent
+
+
+
+
+-----------------
+Fonctionnalitees:
+
+Menu: (changer avec tab ou clic de la sourie)
+-Aide
+-Inventaire(backpack)
+
+Assistant build:
+-Ajout de barrière avec la sourie(mur)
+
+
+pouvoir jouer en local
+Afk possible
+
+-----------------
+Personnalisation:
+
+
+Différents jobs:
+-pompier
+-restaurateur
+-prof
+-vendeur d'appart
+-explorateur(labyrinthe)
+
+
+
+Lieux: 
+    -> Maison
+    -> Jardin
+    -> Interaction avec pnj
+
+
+Autre:
+-Ajouter déco vert et bleu(ancienne console)
+
+
+
+          
+            
+
+Avancé:
+
+-> afficher monnaie
+    -> faire un mini-jeu de cuisine
+        -> storyborard
+        -> quetes
+        -> aide au depart du jeu
+        -> didacticiel + présentation touches et but du jeu
+            
+-> plusieurs skin sans personnalisation
+    -> 1 skin personnalisable par le joueur(cheveux, body et pantalon, chaussure)
+        -> animations du perso
+            -> particules
