@@ -1,9 +1,14 @@
 But du jeu:
+
+
+mettre tt le code du jeu en anglais(hors dialogues)
 ajouter une carte du jeu
 mouvement du perso
 zone d'ombre autour du personnage -> immersion+ difficulté
 erreur collision bas gauche ou bas droite
 mettre jeu et fonction en anglais
+afficher le nom de l'objet que l'on place
+
 
 ajouter fluidité qd marche
 Caractéristiques:

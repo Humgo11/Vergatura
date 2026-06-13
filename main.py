@@ -88,12 +88,6 @@ class Game:
             return False
 
 
-    
-      
-        
-          
-                
-                
     def draw_menu_pause(self):
         """dessine le menu pause"""
         option = {0:"Continuer" ,1:"Aide", 2:"Changer skin"}
@@ -217,22 +211,25 @@ class Game:
             
     
     def add_element(self, position, filename, type_obj='wall'):
-        """position: la position de l'élément à placer
-        filename: le nom du fichier ou ajouter les modifications
-        type_obj: le nom de l'objet que l'on rajoute"""
+        """position: the coordinate of the object
+        filename: the name of the filewe want to add element
+        type_obj: the name of the object you want to add"""
      # TODO: a modifier pour pouvoir avoir différents walls différents  
         
         if filename == FICHIER_COLL:
             self.list_collisions = self.reading_save(filename)#on met à jour tout le fichier de collision
             
-            
-            # if type_obj =="wall":
-            if position not in self.list_collisions[type_obj]:
-                self.list_collisions[type_obj].append(position)
-            
+            if type_obj in self.list_collisions.keys():
+
+                if position not in self.list_collisions[type_obj]:
+                    self.list_collisions[type_obj].append(position)
+
+                else:
+                    self.list_collisions[type_obj].remove(position)
+                # elif type_obj == "invisible_wall":
             else:
-                self.list_collisions[type_obj].remove(position)
-            # elif type_obj == "invisible_wall":
+                self.list_collisions[type_obj] = [position]
+
                 
             
                     
@@ -260,22 +257,26 @@ class Game:
             # if there is a save file
             with open(filename,"r") as fichier:
                 
-                sauvegarde = json.load(fichier)
-                print(sauvegarde)
-                return sauvegarde
+                save = json.load(fichier)
+                print(save)
+                return save
             
         except:
             # without save file
             print('no save')
             self.save(name, {self.name_obj_collision:[[0,0]]})
             with open(filename ,"r") as fichier:
-                sauvegarde = json.load(fichier)
+                save = json.load(fichier)
                 
-                return sauvegarde
+                return save
             
     
 class Wall:
     def __init__(self):
+        pass
+
+
+    def update(self):
         pass
 
 
@@ -323,7 +324,7 @@ class Player:
         elif pyxel.btn(pyxel.KEY_Z):
             y = -TILESIZE
 
-        if pyxel.frame_count % 3 == 0 and self.animation == False:
+        if self.animation == False:
             if not self.check_collision(x, y):
                 self.direction_x = x
                 self.direction_y = y
@@ -415,7 +416,8 @@ def draw():
         # pyxel.bltm(0,0, 0, 0, 0, 128, 128)
         player.draw()
         game.draw()
-        
+
+        # if text to draw:
         if len(game.text_to_draw) != 0:
             pyxel.bltm(0, 95, 0, 256, 0, 128, 64)
             game.draw_text()
