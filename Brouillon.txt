@@ -1,8 +1,11 @@
 But du jeu:
-
+ajouter une carte du jeu
+mouvement du perso
+zone d'ombre autour du personnage -> immersion+ difficulté
+erreur collision bas gauche ou bas droite
 mettre jeu et fonction en anglais
 
-
+ajouter fluidité qd marche
 Caractéristiques:
     Jeu/utilitaire en 2d
     plateau avec tuilles
@@ -13,17 +16,19 @@ Caractéristiques:
     ajout de dialogue narratif
 
 
-
+Faire une classe collision
 Nettoyage du code
-
+réduction de l'affichage à seulement ce que vois le joueur
 
 
 Elements de base
 
-
+collision mur invisible
+verif pas de doublons dans collision
 -> ajouter une tête qui montre qui parle
 -> ajout de pnj
     -> ajout de dialogues
+        -> ajout d'algo pour faire marcher
 
 -> faire map pour voyager entre les diférents villages(comme dans Evoland et rpg)
 
@@ -71,7 +76,7 @@ Différents jobs:
 Lieux: 
     -> Maison
     -> Jardin
-    -> Interaction avec pnj
+-> Interaction avec pnj
 
 
 Autre:
@@ -80,8 +85,6 @@ Autre:
 
 
           
-            
-
 Avancé:
 
 -> afficher monnaie
