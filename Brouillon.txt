@@ -3,7 +3,7 @@ But du jeu:
 
 mettre tt le code du jeu en anglais(hors dialogues)
 ajouter une carte du jeu
-mouvement du perso
+mouvement du perso/animations
 zone d'ombre autour du personnage -> immersion+ difficulté
 erreur collision bas gauche ou bas droite
 mettre jeu et fonction en anglais

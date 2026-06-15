@@ -8,6 +8,7 @@ Created on 12/02/2026
 import json
 import pyxel
 from settings import WIDTH, HEIGHT, FICHIER_COLL, TILESIZE
+#from tilemap import player_skin
 
 
 
@@ -20,7 +21,7 @@ liste_state_game = ["InGame", "Backpack"]
 
 
 class Game:
-    def __init__(self):
+    def __init__(self, player):
         """Classe qui gère comment le jeu fonctionne"""
         self.state_game = "InGame"
         self.pause = False
@@ -30,7 +31,7 @@ class Game:
         self.name_obj_collision = "wall"
 
         #initialisation du player
-        self.player = Player()
+        self.player = player
         
         self.list_collisions = self.reading_save(FICHIER_COLL)
 
@@ -57,13 +58,13 @@ class Game:
             elif self.id_option ==1:
                 pass
             elif self.id_option ==2:
-                if player.num_skin +1 > len(player.dict_skin)-1:
-                    player.num_skin = 0
-                elif player.num_skin -1 > 0:
-                    player.num_skin = len(player.dict_skin)-1
-                else:
-                    player.num_skin +=1
-        
+                print(self.player.numero_skin)
+                self.player.change_skin()
+                print(self.player.numero_skin)
+
+
+
+
             
     def update_menu(self, option):
         """update l'id de l'option à choisir
@@ -295,15 +296,32 @@ class Player:
         
         self.job = "Student"#a besoin d'aller à la bibliothèque pour ramener des livres
         
-        self.num_skin = 2
-        self.dict_skin = {0:{"N":[152, 24, 8, 8],"S":[144, 16, 8, 8], "E":[144, 16, 8, 8],"O":[144, 16, -8, 8]},
-                          1: {"N":[144, 48, 8, 8],"S":[144, 40, 8, 8], "E":[144, 40, 8, 8],"O":[144, 40, -8, 8]},
-                          2: {"N":[144, 64, 8, 8],"S":[144, 56, 8, 8], "E":[144, 56, 8, 8],"O":[144, 56, -8, 8]}}
+        self.numero_skin = 2
+        #self.id_skin = 0
+        self.dict_skin = {0:{"N":[144, 40, 8, 8],"S":[144, 32, 8, 8], "E":[144, 32, 8, 8],"O":[144, 32, -8, 8]},
+                          1: {"N":[144, 56, 8, 8],"S":[144, 48, 8, 8], "E":[144, 48, 8, 8],"O":[144, 48, -8, 8]},
+                          2: {"N":[144, 72, 8, 8],"S":[144, 64, 8, 8], "E":[144, 64, 8, 8],"O":[144, 64, -8, 8]}}
 
-        self.animation = False
+        self.animation = False#if the player is walking -> no other direction
         self.direction_x = 0
         self.direction_y = 0
-        
+
+    def change_skin(self):
+
+        if self.numero_skin <len(self.dict_skin)-1:
+            self.add_num_skin(1)
+
+        else:
+            self.add_num_skin(0)
+
+
+    def add_num_skin(self, num):
+        if num == 0:
+            self.numero_skin = 0
+        elif num ==1:
+            self.numero_skin +=1
+
+
     def update(self):
         #make move the tilemap
         x=0
@@ -313,7 +331,7 @@ class Player:
         if pyxel.btn(pyxel.KEY_Q):
             x =-TILESIZE
             
-            
+
         elif pyxel.btn(pyxel.KEY_D):
             x= TILESIZE
             
@@ -389,11 +407,11 @@ class Player:
     
     def draw(self):
         # pyxel.rect(player.x, player.y, 8, 8, 1)debug
-        
-        pyxel.blt(self.x, self.y, 0, self.dict_skin[self.num_skin][self.sens][0],
-                  self.dict_skin[self.num_skin][self.sens][1], self.dict_skin[self.num_skin][self.sens][2],
-                  self.dict_skin[self.num_skin][self.sens][3], colkey=2)
-        
+
+        pyxel.blt(self.x, self.y, 0,self.dict_skin[self.numero_skin][self.sens][0], self.dict_skin[self.numero_skin][self.sens][1],
+                  self.dict_skin[self.numero_skin][self.sens][2], self.dict_skin[self.numero_skin][self.sens][3], colkey=2)
+
+
         
 
 
@@ -437,8 +455,9 @@ def draw():
 
 
 
-game = Game()
+
 player = Player()
+game = Game(player)
 #game.add_text("Hello~My name is Hugo~Welcome to my world~")
 
 if __name__ == "__main__":    
