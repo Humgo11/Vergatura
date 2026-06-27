@@ -7,11 +7,13 @@ Created on 12/02/2026
 
 import json
 import pyxel
+from tilemap import save, reading_save
 from settings import WIDTH, HEIGHT, FICHIER_COLL, TILESIZE
+#from tilemap import player_skin
 
 
 
-pyxel.init(WIDTH, HEIGHT, fps=30,title="Vergatura and the forgotten Library")#,display_scale=5 #possibilité de rajouté un dézoom 
+pyxel.init(WIDTH, HEIGHT, fps=30,title="Vergatura and the forgotten Library",display_scale=10)##possibilité de rajouté un dézoom
 
 
 pyxel.load("2.pyxres")
@@ -20,7 +22,7 @@ liste_state_game = ["InGame", "Backpack"]
 
 
 class Game:
-    def __init__(self):
+    def __init__(self, player):
         """Classe qui gère comment le jeu fonctionne"""
         self.state_game = "InGame"
         self.pause = False
@@ -30,16 +32,16 @@ class Game:
         self.name_obj_collision = "wall"
 
         #initialisation du player
-        self.player = Player()
+        self.player = player
         
-        self.list_collisions = self.reading_save(FICHIER_COLL)
+        self.list_collisions = reading_save(FICHIER_COLL)
 
         self.id_option = 0
         
         self.text_to_draw = []
 
         self.origin_point = [0,0]
-        self.modification_map = False
+
     
     
     def choice_option(self, option:dict):
@@ -57,13 +59,13 @@ class Game:
             elif self.id_option ==1:
                 pass
             elif self.id_option ==2:
-                if player.num_skin +1 > len(player.dict_skin)-1:
-                    player.num_skin = 0
-                elif player.num_skin -1 > 0:
-                    player.num_skin = len(player.dict_skin)-1
-                else:
-                    player.num_skin +=1
-        
+                print(self.player.numero_skin)
+                self.player.change_skin()
+                print(self.player.numero_skin)
+
+
+
+
             
     def update_menu(self, option):
         """update l'id de l'option à choisir
@@ -113,38 +115,7 @@ class Game:
                 self.state_game = "Backpack"
             else:
                 self.state_game = 'InGame'
-        #------------------------------------------------------------------------------------
-        #outils de construction de map
-        if pyxel.btnp(pyxel.KEY_M):
-            if self.modification_map ==False:
-                pyxel.mouse(True)
-                self.debug = True
-                self.modification_map = True
-            else:
-               pyxel.mouse(False)
-               self.debug = False
-               self.modification_map = False 
 
-
-        if pyxel.btnp(pyxel.MOUSE_BUTTON_RIGHT) and self.modification_map:
-            i=0
-            stop = False
-            while i < len(self.list_name_obj) and stop == False:
-                if self.list_name_obj[i] == self.name_obj_collision:
-                    if len(self.list_name_obj) > i+1:
-                        self.name_obj_collision = self.list_name_obj[i+1]
-                        
-                    else:
-                        self.name_obj_collision = self.list_name_obj[0]
-                    stop = True
-                i+=1
-            print(self.name_obj_collision)
-
-        if pyxel.btnp(pyxel.MOUSE_BUTTON_LEFT) and self.modification_map:
-            if self.centred == True:
-                self.add_element([pyxel.mouse_x-pyxel.mouse_x%TILESIZE-player.cam_x , pyxel.mouse_y - pyxel.mouse_y%TILESIZE -player.cam_y], FICHIER_COLL,self.name_obj_collision)
-            else:
-                self.add_element([pyxel.mouse_x-player.cam_x,pyxel.mouse_y-player.cam_y], FICHIER_COLL,self.name_obj_collision)
         
    
 
@@ -169,8 +140,7 @@ class Game:
             #     pyxel.blt(tab[0]+player.cam_x, tab[1]+player.cam_y, 0, 72, 104, 8, 8, colkey=2)
         
         
-        if self.modification_map==True:
-            pyxel.blt(pyxel.mouse_x-pyxel.mouse_x % TILESIZE, pyxel.mouse_y - pyxel.mouse_y % TILESIZE, 0, 8, 120, 8, 8, colkey=2)
+
             
         
     def draw_text(self):
@@ -205,79 +175,7 @@ class Game:
             
     
         
-    def change_name_obj_collision(self, new_name=str):
-        """change l'objet que tu rajoutes/enlève de la tilemap"""
-        self.name_obj_collision = new_name
-            
-    
-    def add_element(self, position, filename, type_obj='wall'):
-        """position: the coordinate of the object
-        filename: the name of the filewe want to add element
-        type_obj: the name of the object you want to add"""
-     # TODO: a modifier pour pouvoir avoir différents walls différents  
-        
-        if filename == FICHIER_COLL:
-            self.list_collisions = self.reading_save(filename)#on met à jour tout le fichier de collision
-            
-            if type_obj in self.list_collisions.keys():
 
-                if position not in self.list_collisions[type_obj]:
-                    self.list_collisions[type_obj].append(position)
-
-                else:
-                    self.list_collisions[type_obj].remove(position)
-                # elif type_obj == "invisible_wall":
-            else:
-                self.list_collisions[type_obj] = [position]
-
-                
-            
-                    
-            
-            self.save(FICHIER_COLL, self.list_collisions)#on sauvegarde les changements
-            
-    
-    
-    def save(self, name, chose_dump):
-        """save chose_dump into the file that begin with name
-        name: the name of the save, without the '.json' """
-        filename = str(name)+".json"
-        
-        print('sauvegarde en cour')
-        with open(filename ,"w") as fichier:
-            json.dump(chose_dump, fichier)
-            return fichier
-            
-
-    def reading_save(self, name):
-        """loading of the save"""
-        filename = str(name)+".json"
-        
-        try:
-            # if there is a save file
-            with open(filename,"r") as fichier:
-                
-                save = json.load(fichier)
-                print(save)
-                return save
-            
-        except:
-            # without save file
-            print('no save')
-            self.save(name, {self.name_obj_collision:[[0,0]]})
-            with open(filename ,"r") as fichier:
-                save = json.load(fichier)
-                
-                return save
-            
-    
-class Wall:
-    def __init__(self):
-        pass
-
-
-    def update(self):
-        pass
 
 
 
@@ -295,15 +193,32 @@ class Player:
         
         self.job = "Student"#a besoin d'aller à la bibliothèque pour ramener des livres
         
-        self.num_skin = 2
-        self.dict_skin = {0:{"N":[152, 24, 8, 8],"S":[144, 16, 8, 8], "E":[144, 16, 8, 8],"O":[144, 16, -8, 8]},
-                          1: {"N":[144, 48, 8, 8],"S":[144, 40, 8, 8], "E":[144, 40, 8, 8],"O":[144, 40, -8, 8]},
-                          2: {"N":[144, 64, 8, 8],"S":[144, 56, 8, 8], "E":[144, 56, 8, 8],"O":[144, 56, -8, 8]}}
+        self.numero_skin = 2
+        #self.id_skin = 0
+        self.dict_skin = {0:{"N":[144, 40, 8, 8],"S":[144, 32, 8, 8], "E":[144, 32, 8, 8],"O":[144, 32, -8, 8]},
+                          1: {"N":[144, 56, 8, 8],"S":[144, 48, 8, 8], "E":[144, 48, 8, 8],"O":[144, 48, -8, 8]},
+                          2: {"N":[144, 72, 8, 8],"S":[144, 64, 8, 8], "E":[144, 64, 8, 8],"O":[144, 64, -8, 8]}}
 
-        self.animation = False
+        self.animation = False#if the player is walking -> no other direction
         self.direction_x = 0
         self.direction_y = 0
-        
+
+    def change_skin(self):
+
+        if self.numero_skin <len(self.dict_skin)-1:
+            self.add_num_skin(1)
+
+        else:
+            self.add_num_skin(0)
+
+
+    def add_num_skin(self, num):
+        if num == 0:
+            self.numero_skin = 0
+        elif num ==1:
+            self.numero_skin +=1
+
+
     def update(self):
         #make move the tilemap
         x=0
@@ -313,7 +228,7 @@ class Player:
         if pyxel.btn(pyxel.KEY_Q):
             x =-TILESIZE
             
-            
+
         elif pyxel.btn(pyxel.KEY_D):
             x= TILESIZE
             
@@ -323,6 +238,7 @@ class Player:
         
         elif pyxel.btn(pyxel.KEY_Z):
             y = -TILESIZE
+
 
         if self.animation == False:
             if not self.check_collision(x, y):
@@ -367,7 +283,10 @@ class Player:
                 if self.x - self.cam_x +x== coll[0]  and coll[1] == self.y - self.cam_y + y:
                     return True
         return False
-        
+
+
+
+
     def update_sens(self, x, y):
         #origine dans l'angle en haut à gauche
         if x > 0:
@@ -389,11 +308,11 @@ class Player:
     
     def draw(self):
         # pyxel.rect(player.x, player.y, 8, 8, 1)debug
-        
-        pyxel.blt(self.x, self.y, 0, self.dict_skin[self.num_skin][self.sens][0],
-                  self.dict_skin[self.num_skin][self.sens][1], self.dict_skin[self.num_skin][self.sens][2],
-                  self.dict_skin[self.num_skin][self.sens][3], colkey=2)
-        
+
+        pyxel.blt(self.x, self.y, 0,self.dict_skin[self.numero_skin][self.sens][0], self.dict_skin[self.numero_skin][self.sens][1],
+                  self.dict_skin[self.numero_skin][self.sens][2], self.dict_skin[self.numero_skin][self.sens][3], colkey=2)
+
+
         
 
 
@@ -409,7 +328,7 @@ def update():
 
     
 def draw():
-    pyxel.cls(0)
+    pyxel.cls(3)
     if game.state_game == "InGame" and game.pause == False:
     
         pyxel.bltm(player.cam_x,player.cam_y, 0, 0, 0, 128, 128)
@@ -437,10 +356,12 @@ def draw():
 
 
 
-game = Game()
+
 player = Player()
+game = Game(player)
 #game.add_text("Hello~My name is Hugo~Welcome to my world~")
 
-if __name__ == "__main__":    
+if __name__ == "__main__":
+    pyxel.set_input_text("test")
     pyxel.run(update, draw)
     
